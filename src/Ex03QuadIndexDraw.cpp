@@ -19,10 +19,16 @@ Ex03QuadIndexDraw::Ex03QuadIndexDraw()
         -0.5f,  0.5f, 0.f     // top-left  
         */
 
+    /*
         -0.5f, -0.5f, 0.f,    // bottom-left
          0.5f, -0.5f, 0.f,    // bottom-right
          0.5f,  0.5f, 0.f,    // top-right
         -0.5f,  0.5f, 0.f     // top-left 
+        */
+     -0.5f, -0.5f, 0.f,    1.f, 0.f, 0.f,  // bottom-left,red
+     0.5f, -0.5f, 0.f,    0.f, 1.f, 0.f,   // bottom-right,green  
+     0.5f,  0.5f, 0.f,    0.f, 0.f, 1.f,   // top-right,blue
+     -0.5f,  0.5f, 0.f,    1.f, 1.f, 0.f   // top-left,yellow
     };
 
     std::vector<uint32_t> Indexes = {
@@ -43,8 +49,12 @@ Ex03QuadIndexDraw::Ex03QuadIndexDraw()
 
     //3. Link to Vertex Shader
     GLuint Location_0 = 0;
-    glVertexAttribPointer(Location_0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(Location_0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(Location_0);
+
+    //new: color location
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     //4. Create EBO
     glGenBuffers(1, &Ebo);

@@ -4,6 +4,7 @@
 #include "Ex01TriangleDraw.h"
 #include "Ex02QuadDraw.h"
 #include "Ex03QuadIndexDraw.h"
+#include "Ex03QuadIndexDraw2.h"
 
 int main() 
 {
@@ -11,7 +12,7 @@ int main()
 
 	//Ex01TriangleDraw Scene;
 	//Ex02QuadDraw Scene;
-	Ex03QuadIndexDraw Scene;
+	Ex03QuadIndexDraw2 Scene;
 
 	while(Window.IsOpened()) 
 	{

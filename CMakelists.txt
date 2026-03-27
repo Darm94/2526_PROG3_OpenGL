@@ -5,7 +5,7 @@ set(EXEC_TARGET AppPrj)
 file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HEADERS ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/include/*.h)
 
-add_executable(${EXEC_TARGET} ${HEADERS} ${SOURCES})
+add_executable(${EXEC_TARGET} ${HEADERS} ${SOURCES}  src/Ex03QuadIndexDraw2.cpp)
 set_property(TARGET ${EXEC_TARGET} PROPERTY CXX_STANDARD 20)
 target_include_directories(${EXEC_TARGET} PRIVATE include src)
 
