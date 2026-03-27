@@ -8,6 +8,6 @@ public:
     OGLProgram(const std::string& InVertexPath, const std::string& InFragmPath);
     ~OGLProgram();
     void Bind();
-private:
+public:
     GLuint ProgramId;
 };
