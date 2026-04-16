@@ -47,6 +47,7 @@ GLuint CreateTexture(const std::string& InFilePath)
 
 Ex05QuadTextureDraw::Ex05QuadTextureDraw()
 {
+    mix_factor=0.5f;
     Program = new OGLProgram("resources/shaders/quadtexture.vert", "resources/shaders/quadtexture.frag");
 
     std::vector<float> Vertices = {
@@ -107,6 +108,9 @@ Ex05QuadTextureDraw::Ex05QuadTextureDraw()
 
     //glActiveTexture(GL_TEXTURE1);
     //glBindTexture(GL_TEXTURE_2D, BoxTextureId);
+
+    GLint MixLocation = glGetUniformLocation(Program->ProgramId, "mix_factor");
+    glUniform1f(MixLocation, mix_factor);
 
     SmileTexture->Bind(GL_TEXTURE0);
     BoxTexture->Bind(GL_TEXTURE1);

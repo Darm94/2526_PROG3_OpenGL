@@ -16,4 +16,5 @@ private:
     //GLuint BoxTextureId;
     class OGLTexture* SmileTexture;
     class OGLTexture* BoxTexture;
+    float mix_factor;
 };
