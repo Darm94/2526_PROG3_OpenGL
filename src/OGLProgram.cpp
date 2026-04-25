@@ -37,14 +37,6 @@ void OGLProgram::SetUniform(const std::string& InName, const XColor& InColor)
         1,  reinterpret_cast<const GLfloat*>(&InColor));
 }
 
-void OGLProgram::SetUniform(const std::string& InName, const glm::mat4& InMatrix)
-{
-    glUniformMatrix4fv(
-        glGetUniformLocation(ProgramId, InName.c_str()),
-        1, GL_FALSE, &InMatrix[0][0]
-    );
-}
-
 std::string ReadFile(const std::string& InPath)
 {
     std::ifstream InputStream(InPath, std::ios::ate);
