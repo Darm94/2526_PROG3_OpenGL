@@ -137,4 +137,5 @@ void Ex08PhongDraw::Update(float InDeltaTime)
     Program->SetUniform("model", Model);
 
     glDrawArrays(GL_TRIANGLES, 0, TrupVertexCount);
+    
 }

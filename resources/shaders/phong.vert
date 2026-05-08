@@ -9,14 +9,16 @@ uniform mat4 model;
 
 out vec2 vert_uv_out;
 out vec3 vert_world_norm_out;
+out vec3 vert_world_pos_out;
 
 void main() 
 {
+    
     gl_Position = mvp * vec4(vert_pos, 1.f);
     vert_uv_out = vert_uv;
-    //vert_world_norm_out = vert_norm;
-    //vert_world_norm_out = mat3(model) * vert_norm;
 
     // Mrot: Transp(M) = Inver(M) => M = Transp(Inver(M))
     vert_world_norm_out = mat3(transpose(inverse(model))) * vert_norm;
+
+    vert_world_pos_out = (model * vec4(vert_pos, 1.f)).xyz;
 }
