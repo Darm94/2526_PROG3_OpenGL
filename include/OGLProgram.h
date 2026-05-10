@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <glad/gl.h>
+#include <glm/glm.hpp>
 
 struct XColor {
     float R;
@@ -17,6 +18,8 @@ public:
     void Bind();
     void SetUniform(const std::string& InName, float InValue);
     void SetUniform(const std::string& InName, const XColor& InColor);
+    void SetUniform(const std::string& InName, const glm::mat4& InMat);
+    void SetUniform(const std::string& InName, const glm::vec3& InVec3);
 private:
     GLuint ProgramId;
 };

@@ -3,62 +3,50 @@
 #include "OGLProgram.h"
 #include <cmath>
 #include "OGLTexture.h"
+#include "ObjParser.h"
 
 Ex08PhongDraw::Ex08PhongDraw()
 {
     Program = new OGLProgram("resources/shaders/phong.vert", "resources/shaders/phong.frag");
 
-    // Counter-clock wise. Vertex data are NO MORE in NDC space.
-        std::vector<float> Vertices = {
-        //Position     //Uvs
-        //FRONT FACE
-        -1, -1,  1,     0, 0,  // bottom-left
-         1, -1,  1,     1, 0,  // bottom-right
-         1,  1,  1,     1, 1,  // top-right  
-        -1,  1,  1,     0, 1,  // top-left
-        -1, -1,  1,     0, 0,  // bottom-left
-         1,  1,  1,     1, 1,  // top-right  
-        
-        // BACK FACE
-         1, -1, -1,     0, 0,  // bottom-left
-        -1, -1, -1,     1, 0,  // bottom-right
-        -1,  1, -1,     1, 1,  // top-right  
-         1,  1, -1,     0, 1,  // top-left
-         1, -1, -1,     0, 0,  // bottom-left
-        -1,  1, -1,     1, 1,  // top-right  
- 
-        //LEFT FACE
-        -1, -1, -1,     0, 0,    //bottom-left
-        -1, -1,  1,     1, 0,    //bottom-right
-        -1,  1,  1,     1, 1,    //top-right
-        -1,  1, -1,     0, 1,    //top-left 
-        -1, -1, -1,     0, 0,    //bottom-left
-        -1,  1,  1,     1, 1,    //top-right
+    Obj TrupMesh;
+    ObjParser::TryParse("resources/models/stormtrooper.obj", TrupMesh);
 
-        //RIGHT FACE      
-         1, -1,  1,     0, 0,    //bottom-left
-         1, -1, -1,     1, 0,    //bottom-right
-         1,  1, -1,     1, 1,    //top-right
-         1,  1,  1,     0, 1,    //top-left 
-         1, -1,  1,     0, 0,    //bottom-left
-         1,  1, -1,     1, 1,    //top-right
+    std::vector<float> Vertices;
+    for(int Index = 0; Index < TrupMesh.triangles.size(); ++Index)
+    {
+        auto& triangle = TrupMesh.triangles[Index];
 
-        //TOP FACE      
-        -1,  1,  1,     0, 0,    //bottom-left
-         1,  1,  1,     1, 0,    //bottom-right
-         1,  1, -1,     1, 1,    //top-right
-        -1,  1, -1,     0, 1,    //top-left 
-        -1,  1,  1,     0, 0,    //bottom-left
-         1,  1, -1,     1, 1,    //top-right
-         
-        //BOTTOM FACE
-        -1, -1, -1,     0, 0,    //bottom-left
-         1, -1, -1,     1, 0,    //bottom-right
-         1, -1,  1,     1, 1,    //top-right
-        -1, -1,  1,     0, 1,    //top-left 
-        -1, -1, -1,     0, 0,    //bottom-left
-         1, -1,  1,     1, 1,    //top-right
-    };
+        Vertices.push_back(triangle.v1.point.x);
+        Vertices.push_back(triangle.v1.point.y);
+        Vertices.push_back(triangle.v1.point.z);
+        Vertices.push_back(triangle.v1.uv.x);
+        Vertices.push_back(triangle.v1.uv.y);
+        Vertices.push_back(triangle.v1.normal.x);
+        Vertices.push_back(triangle.v1.normal.y);
+        Vertices.push_back(triangle.v1.normal.z);
+
+        Vertices.push_back(triangle.v2.point.x);
+        Vertices.push_back(triangle.v2.point.y);
+        Vertices.push_back(triangle.v2.point.z);
+        Vertices.push_back(triangle.v2.uv.x);
+        Vertices.push_back(triangle.v2.uv.y);
+        Vertices.push_back(triangle.v2.normal.x);
+        Vertices.push_back(triangle.v2.normal.y);
+        Vertices.push_back(triangle.v2.normal.z);
+
+        Vertices.push_back(triangle.v3.point.x);
+        Vertices.push_back(triangle.v3.point.y);
+        Vertices.push_back(triangle.v3.point.z);
+        Vertices.push_back(triangle.v3.uv.x);
+        Vertices.push_back(triangle.v3.uv.y);
+        Vertices.push_back(triangle.v3.normal.x);
+        Vertices.push_back(triangle.v3.normal.y);
+        Vertices.push_back(triangle.v3.normal.z);
+    }
+
+    TrupVertexCount = TrupMesh.triangles.size() * 3;
+
 
     //1. Create VAO
     glGenVertexArrays(1, &Vao);
@@ -73,12 +61,16 @@ Ex08PhongDraw::Ex08PhongDraw()
 
     //3. Link to Vertex Shader
     GLuint Location_0 = 0;
-    glVertexAttribPointer(Location_0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(Location_0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(Location_0);
 
     GLuint Location_1 = 1;
-    glVertexAttribPointer(Location_1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(Location_1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(Location_1);
+
+    GLuint Location_2 = 2;
+    glVertexAttribPointer(Location_2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glEnableVertexAttribArray(Location_2);
 
     //4. Set Viewport
     glViewport(0, 0, 800, 600);
@@ -87,30 +79,34 @@ Ex08PhongDraw::Ex08PhongDraw()
     Program->Bind();
 
     //6. Texture Setup
-    BoxTexture = new OGLTexture("resources/textures/wood-box.jpg");
-    
-    // In case of using `uniform sampler2D smile_tex;` (without layout binding)
-    //glUniform1i(glGetUniformLocation(Program->ProgramId, "smile_tex"), 0);
-
-    BoxTexture->Bind(GL_TEXTURE0);
+    TrupTexture = new OGLTexture("resources/models/stormtrooper.png");
+    TrupTexture->Bind(GL_TEXTURE0);
 
     //7. Enable Depth Testing
     glEnable(GL_DEPTH_TEST);
 
     //8. Enable Cull Face
     glEnable(GL_CULL_FACE);
-    //glFrontFace(GL_CCW);  //default
-    //glFrontFace(GL_CW);
-    
-    //glCullFace(GL_BACK); //default
-    //glCullFace(GL_FRONT);
+
+    // Camera
+    glm::vec3 Position = glm::vec3(0, 0, 8);
+    glm::vec3 Direction = glm::vec3(0, 0, -1);
+    glm::vec3 Up = glm::vec3(0, 1, 0);
+    float FovY = 60.f;
+    float AspectRatio = 800.f / 600.f;
+    float ZNear = 0.01;
+    float ZFar = 100.f;
+
+    View = glm::lookAt(Position, Position + Direction, Up);
+    Projection = glm::perspective(glm::radians(FovY), AspectRatio, ZNear, ZFar);
+
 }
 
 Ex08PhongDraw::~Ex08PhongDraw()
 {
     glDeleteVertexArrays(1, &Vao);
     glDeleteBuffers(1, &Vbo);
-    delete BoxTexture;
+    delete TrupTexture;
     delete Program;
 }
 
@@ -120,8 +116,26 @@ void Ex08PhongDraw::Update(float InDeltaTime)
 
     static float ElapsedTime = 0.f;
     ElapsedTime += InDeltaTime;
+    
+    float Angle = 20.f * ElapsedTime;
 
-    Program->SetUniform("angle", 20.f * ElapsedTime);
+    /*
+    glm::mat4 Translate = glm::translate(glm::mat4(1.f), glm::vec3(0, -4, 0));
+    glm::mat4 Rotation = glm::rotate(glm::mat4(1.f), glm::radians(-Angle), glm::vec3(0, 1, 0));
+    glm::mat4 Scale = glm::scale(glm::mat4(1.f), glm::vec3(2.f));
+    glm::mat4 Model =  Translate * Rotation * Scale;
+    */
 
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glm::mat4 Model = glm::mat4(1.f);
+    Model = glm::translate(Model, glm::vec3(0, -4, 0));
+    Model = glm::rotate(Model, glm::radians(-Angle), glm::vec3(0, 1, 0));
+    Model = glm::scale(Model, glm::vec3(2.f));
+
+    glm::mat4 Mvp = Projection * View * Model;
+
+    Program->SetUniform("mvp", Mvp);
+    Program->SetUniform("model", Model);
+
+    glDrawArrays(GL_TRIANGLES, 0, TrupVertexCount);
+    
 }
